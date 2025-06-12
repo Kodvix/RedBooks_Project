@@ -15,8 +15,9 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI apiInfo() {
         return new OpenAPI()
-                .info(new Info().title("Book StoreAPI")
-                        .description("RedBooks Apis")
+                .info(new Info()
+                        .title("RedBooks API")
+                        .description("API documentation for RedBooks system")
                         .version("1.0")
                 )
                 .servers(List.of(
@@ -24,7 +25,10 @@ public class OpenApiConfig {
                         new Server().url("https://api.yourdomain.com").description("Production Server")
                 ))
                 .tags(List.of(
-                        new Tag().name("User API")
+                        new Tag().name("Authentication API").description("Endpoints for user registration and login"),
+                        new Tag().name("Customer API").description("Endpoints for customers (parents/students)"),
+                        new Tag().name("School API").description("Endpoints for schools"),
+                        new Tag().name("Publisher API").description("Endpoints for publishers")
                 ));
     }
 }
