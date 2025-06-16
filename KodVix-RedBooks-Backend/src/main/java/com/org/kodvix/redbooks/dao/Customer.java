@@ -4,15 +4,29 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@DiscriminatorValue("CUSTOMER")
+@Table(name = "customers")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer extends User {
-    @Column(nullable = true)
+@Builder
+public class Customer {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; // Primary key for Customer table (customer_id)
+
+    // ✅ Reference to the main User entity
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(nullable = false)
     private String schoolName;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String studentClass;
+
+    @Column(nullable = true)
+    private String address; // Optional, nullable
 }

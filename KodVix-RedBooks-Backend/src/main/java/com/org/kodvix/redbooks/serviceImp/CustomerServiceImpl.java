@@ -1,4 +1,5 @@
 package com.org.kodvix.redbooks.serviceImp;
+
 import com.org.kodvix.redbooks.dao.*;
 import com.org.kodvix.redbooks.repository.*;
 import com.org.kodvix.redbooks.service.CustomerService;
@@ -11,15 +12,20 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CustomerServiceImpl implements CustomerService{
+public class CustomerServiceImpl implements CustomerService {
+
     private final UserRepository userRepository;
+    private final CustomerRepository customerRepository;
     private final ClassEntityRepository classRepository;
     private final OrderRepository orderRepository;
 
     @Override
     public List<Book> getBooksForCustomer(String customerEmail) {
-        Customer customer = (Customer) userRepository.findByEmail(customerEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
+        User user = userRepository.findByEmail(customerEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Customer customer = customerRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new RuntimeException("Customer details not found"));
 
         List<ClassEntity> classes = classRepository.findBySchoolId(getSchoolIdByName(customer.getSchoolName()));
 
@@ -39,11 +45,15 @@ public class CustomerServiceImpl implements CustomerService{
                 .orElseThrow(() -> new RuntimeException("School not found"))
                 .getId();
     }
+
     @Override
     @Transactional
     public Order placeOrder(String customerEmail, Long classId) {
-        Customer customer = (Customer) userRepository.findByEmail(customerEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
+        User user = userRepository.findByEmail(customerEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Customer customer = customerRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new RuntimeException("Customer details not found"));
 
         ClassEntity classEntity = classRepository.findById(classId)
                 .orElseThrow(() -> new RuntimeException("Class not found"));
@@ -59,8 +69,11 @@ public class CustomerServiceImpl implements CustomerService{
 
     @Override
     public List<Order> getOrders(String customerEmail) {
-        Customer customer = (Customer) userRepository.findByEmail(customerEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("Customer not found"));
+        User user = userRepository.findByEmail(customerEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Customer customer = customerRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new RuntimeException("Customer details not found"));
 
         return orderRepository.findByCustomerId(customer.getId());
     }

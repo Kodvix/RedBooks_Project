@@ -21,4 +21,6 @@ public class RegisterCustomerRequest {
 
     @NotBlank
     private String studentClass;
+
+    private String address;
 }

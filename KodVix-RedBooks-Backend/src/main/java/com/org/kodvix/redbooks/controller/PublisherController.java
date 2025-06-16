@@ -13,7 +13,6 @@ import java.util.List;
 @RequestMapping("/publisher")
 @RequiredArgsConstructor
 @Tag(name = "Publisher API", description = "Endpoints for publishers to view books, schools, and orders")
-
 public class PublisherController {
     private final PublisherService publisherService;
 
@@ -28,7 +27,6 @@ public class PublisherController {
     public ResponseEntity<List<Book>> getBooks() {
         return ResponseEntity.ok(publisherService.getAllBooks());
     }
-
 
     @Operation(summary = "Get all orders placed")
     @GetMapping("/orders")

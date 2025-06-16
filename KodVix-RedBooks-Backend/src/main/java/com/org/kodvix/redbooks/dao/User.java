@@ -10,7 +10,7 @@ import lombok.*;
 @DiscriminatorColumn(name = "user_type")
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;//to be referenced in Customer table
 
     @Column(nullable = false)
     private String name;

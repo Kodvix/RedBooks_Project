@@ -4,6 +4,7 @@ import com.org.kodvix.redbooks.service.AuthenticationService;
 import com.org.kodvix.redbooks.dto.*;
 import com.org.kodvix.redbooks.dao.*;
 import com.org.kodvix.redbooks.repository.UserRepository;
+import com.org.kodvix.redbooks.repository.CustomerRepository;
 import com.org.kodvix.redbooks.security.JwtUtils;
 import com.org.kodvix.redbooks.mapper.*;
 import jakarta.transaction.Transactional;
@@ -17,10 +18,10 @@ import org.springframework.stereotype.Service;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
+    private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
-
 
     private final CustomerMapper customerMapper;
     private final SchoolMapper schoolMapper;
@@ -33,10 +34,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new RuntimeException("Email is already in use");
         }
 
-        Customer customer = customerMapper.toDao(req, passwordEncoder);
-        userRepository.save(customer);
+        // ✅ Step 1: Save User
+        User user = customerMapper.toUser(req, passwordEncoder);
+        userRepository.save(user);
 
-        return new AuthResponse(jwtUtils.generateJwtToken(customer.getEmail()));
+        // ✅ Step 2: Save Customer linked to User
+        Customer customer = customerMapper.toCustomer(req, user);
+        customerRepository.save(customer);
+
+        // ✅ Return JWT based on User email
+        return new AuthResponse(jwtUtils.generateJwtToken(user.getEmail()));
     }
 
     @Override
