@@ -1,18 +1,12 @@
 package com.org.kodvix.redbooks.dao;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -27,7 +21,7 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long bookId;
 
     @Column(nullable = false)
     private String title;
@@ -38,4 +32,7 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "school_id")
     private School school;
+
+    @ManyToMany(mappedBy = "books") // 🔥 This enables book.getClasses()
+    private Set<ClassEntity> classes = new HashSet<>();
 }

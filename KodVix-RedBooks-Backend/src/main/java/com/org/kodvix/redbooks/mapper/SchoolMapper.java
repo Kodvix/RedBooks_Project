@@ -3,6 +3,7 @@ package com.org.kodvix.redbooks.mapper;
 import com.org.kodvix.redbooks.dao.Role;
 import com.org.kodvix.redbooks.dao.School;
 import com.org.kodvix.redbooks.dto.RegisterSchoolRequest;
+import com.org.kodvix.redbooks.dto.SchoolResponseDto;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -24,4 +25,12 @@ public class SchoolMapper {
         dto.setPassword(school.getPassword());
         return dto;
     }
+    public SchoolResponseDto toResponseDto(School school) {
+        return new SchoolResponseDto(
+                school.getId(),
+                school.getName(),
+                school.getEmail()
+        );
+    }
+
 }

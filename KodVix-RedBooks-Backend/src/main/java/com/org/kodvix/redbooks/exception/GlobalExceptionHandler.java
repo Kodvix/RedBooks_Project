@@ -3,6 +3,7 @@ package com.org.kodvix.redbooks.exception;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -67,8 +68,131 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDetails> handleGeneric(Exception ex, WebRequest request) {
-        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error: " + ex.getMessage(), request.getDescription(false));
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorDetails> handleGeneric(Exception ex, WebRequest request) {
+//        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error: " + ex.getMessage(), request.getDescription(false));
+//    }
+    @ExceptionHandler(DuplicateBookException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateBookException(DuplicateBookException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("message", ex.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
     }
+    @ExceptionHandler(DuplicateClassException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateClassException(DuplicateClassException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("message", ex.getMessage());
+        return ResponseEntity.badRequest().body(error);
+    }
+    @ExceptionHandler(BookAlreadyAssignedException.class)
+    public ResponseEntity<Map<String, String>> handleBookAlreadyAssignedException(BookAlreadyAssignedException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("message", ex.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+    @ExceptionHandler(SchoolNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleSchoolNotFoundException(SchoolNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("message", ex.getMessage());
+        return ResponseEntity.badRequest().body(error);
+    }
+    @ExceptionHandler(EmailAlreadyInUseException.class)
+    public ResponseEntity<Map<String, String>> handleEmailAlreadyInUse(EmailAlreadyInUseException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("message", ex.getMessage());
+        return ResponseEntity.badRequest().body(error);
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String, String>> handleBadCredentials(BadCredentialsException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Invalid email or password");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+    @ExceptionHandler(OtpValidationException.class)
+    public ResponseEntity<Map<String, String>> handleOtpValidationException(OtpValidationException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        return ResponseEntity.badRequest().body(response);
+    }
+    @ExceptionHandler(InvalidClassAccessException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidClassAccess(InvalidClassAccessException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", ex.getMessage());
+        return ResponseEntity.badRequest().body(response);
+    }
+    @ExceptionHandler(BookNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleBookNotFound(BookNotFoundException ex) {
+        return simpleMessage(ex.getMessage());
+    }
+
+    @ExceptionHandler(BookOwnershipMismatchException.class)
+    public ResponseEntity<Map<String, String>> handleOwnershipMismatch(BookOwnershipMismatchException ex) {
+        return simpleMessage(ex.getMessage());
+    }
+
+    @ExceptionHandler(BookTitleMismatchException.class)
+    public ResponseEntity<Map<String, String>> handleTitleMismatch(BookTitleMismatchException ex) {
+        return simpleMessage(ex.getMessage());
+    }
+    @ExceptionHandler(ClassNotFoundCustomException.class)
+    public ResponseEntity<Map<String, String>> handleClassNotFound(ClassNotFoundCustomException ex) {
+        return simpleMessage(ex.getMessage());
+    }
+
+    @ExceptionHandler(ClassOwnershipException.class)
+    public ResponseEntity<Map<String, String>> handleClassOwnership(ClassOwnershipException ex) {
+        return simpleMessage(ex.getMessage());
+    }
+    @ExceptionHandler(ClassMismatchException.class)
+    public ResponseEntity<Map<String, String>> handleClassMismatch(ClassMismatchException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("message", ex.getMessage());
+        return ResponseEntity.badRequest().body(error);
+    }
+    @ExceptionHandler(CustomerDetailsNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCustomerDetailsNotFound(CustomerDetailsNotFoundException ex) {
+        return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+    }
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleOrderNotFound(OrderNotFoundException ex) {
+        return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+    }
+    @ExceptionHandler(UnauthorizedOrderCancellationException.class)
+    public ResponseEntity<Map<String, String>> handleUnauthorizedCancel(UnauthorizedOrderCancellationException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", ex.getMessage()));
+    }
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCustomerNotFound(CustomerNotFoundException ex) {
+        return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(CustomerClassNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCustomerClassNotFound(CustomerClassNotFoundException ex) {
+        return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+    }
+    @ExceptionHandler(ClassNotFoundForSchoolException.class)
+    public ResponseEntity<Map<String, String>> handleClassNotFoundForSchool(ClassNotFoundForSchoolException ex) {
+        return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+    }
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleUserNotFound(UserNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidPassword(InvalidPasswordException ex) {
+        return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+    }
+
+
+    private ResponseEntity<Map<String, String>> simpleMessage(String message) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", message);
+        return ResponseEntity.badRequest().body(response);
+    }
+
+
+
+
 }
+

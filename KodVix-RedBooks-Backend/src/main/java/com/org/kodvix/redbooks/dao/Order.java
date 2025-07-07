@@ -13,12 +13,14 @@ import lombok.*;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long orderId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customer_id", referencedColumnName = "customerId")
     private Customer customer;
 
     @ManyToOne
+    @JoinColumn(name = "class_id", referencedColumnName = "classId")
     private ClassEntity classEntity;
 
     @Enumerated(EnumType.STRING)

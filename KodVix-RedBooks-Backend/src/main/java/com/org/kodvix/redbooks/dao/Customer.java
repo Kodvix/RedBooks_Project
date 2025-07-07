@@ -14,7 +14,7 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Primary key for Customer table (customer_id)
+    private Long customerId; // Primary key for Customer table (customer_id)
 
 
     @OneToOne(fetch = FetchType.LAZY)

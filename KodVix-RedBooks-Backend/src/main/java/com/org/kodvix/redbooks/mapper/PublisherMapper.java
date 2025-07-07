@@ -2,6 +2,7 @@ package com.org.kodvix.redbooks.mapper;
 
 import com.org.kodvix.redbooks.dao.Publisher;
 import com.org.kodvix.redbooks.dao.Role;
+import com.org.kodvix.redbooks.dto.PublisherResponse;
 import com.org.kodvix.redbooks.dto.RegisterPublisherRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -24,5 +25,13 @@ public class PublisherMapper {
         dto.setEmail(publisher.getEmail());
         dto.setPassword(publisher.getPassword());
         return dto;
+    }
+    public PublisherResponse toResponse(Publisher publisher) {
+        return new PublisherResponse(
+                publisher.getId(),
+                publisher.getName(),
+                publisher.getEmail()
+
+        );
     }
 }

@@ -3,6 +3,7 @@ package com.org.kodvix.redbooks.mapper;
 import com.org.kodvix.redbooks.dao.Customer;
 import com.org.kodvix.redbooks.dao.Role;
 import com.org.kodvix.redbooks.dao.User;
+import com.org.kodvix.redbooks.dto.CustomerResponse;
 import com.org.kodvix.redbooks.dto.RegisterCustomerRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -27,4 +28,15 @@ public class CustomerMapper {
                 .address(request.getAddress())
                 .build();
     }
+    public CustomerResponse toResponse(Customer customer) {
+        return new CustomerResponse(
+                customer.getCustomerId(),
+                customer.getUser().getName(),
+                customer.getUser().getEmail(),
+                customer.getSchoolName(),
+                customer.getStudentClass(),
+                customer.getAddress()
+        );
+    }
+
 }
